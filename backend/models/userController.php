@@ -52,14 +52,14 @@ class UserController
         try {
         $email =   $data['email'];
         $pass= $data['password'];
-        $query= 'SELECT *FROM usuarios where email=:email';
+        $query= 'SELECT *FROM usuarios where email=:email AND baneado = 0';
         $statement =$this->conn->prepare($query);
         $statement->bindParam(':email',$email);
 
         $statement->execute();
 
         $us=$statement->fetch(PDO::FETCH_ASSOC);
-        
+       // print $us;
         if($us && password_verify($pass,$us['password'])){
             $this->user=new Usuario($us['id'], $us['email'],$us['nombre'],$us['password'],$us['rol']);
        

@@ -92,6 +92,7 @@ function Register() {
                     <option value="">----------Selecciona--------</option>
                     <option value="usuarioRegular">Usuario</option>
                     <option value="PUBLICADOR">Publicador</option>
+                    <option value="admin">Administrador</option>
                   </select>
                 </div>
                 {error && <div className="alert alert-danger">{error}</div>}{" "}

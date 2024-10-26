@@ -5,6 +5,14 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Navbar from "./components/Navegacion";
 import { UserProvider } from "./components/UserContext";
+import ProtectedRoute from "./components/protectedRoute";
+import PublicadorDashboard from "./components/poster/posterDashboard";
+import WelcomeDashboard from "./components/poster/bienvenida";
+import Posts from "./components/poster/posts";
+import AdminDashboard from "./components/admin/adminDashboard";
+import BienvenidaA from "./components/admin/bienvenida";
+import AprobarPost from "./components/admin/adminDashboard";
+import AprobarReport from "./components/admin/aprobarReporte";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +31,57 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+
+                {/* Rutas protegidas */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute roleRequired="admin">
+                      <BienvenidaA/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/report-apribar"
+                  element={
+                    <ProtectedRoute roleRequired="admin">
+                     <AprobarReport/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/post-aprobar"
+                  element={
+                    <ProtectedRoute roleRequired="admin">
+                      <AprobarPost/>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/crear"
+                  element={
+                    <ProtectedRoute roleRequired="publicador">
+                      <PublicadorDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/publicador"
+                  element={
+                    <ProtectedRoute roleRequired="publicador">
+                      <WelcomeDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/posts"
+                  element={
+                    <ProtectedRoute roleRequired="publicador">
+                      <Posts />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </div>
           </div>

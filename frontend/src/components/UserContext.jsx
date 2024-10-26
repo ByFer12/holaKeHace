@@ -10,6 +10,7 @@ export const UserProvider = ({ children }) => {
   // Al iniciar el componente, cargamos el usuario desde localStorage si existe
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
+    console.log("CONTEXTOOOOOOOO: ",storedUser);
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }

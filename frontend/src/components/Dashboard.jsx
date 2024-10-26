@@ -5,17 +5,42 @@ import { useUser } from "./UserContext";
 
 function Dashboard() {
   const { user } = useUser();
+  
 
   const [posts,setPost]=useState([]);
   const [cat,setCat]=useState([]);
   const [error, setError]= useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const [reporteMotivo, setReporteMotivo] = useState("");
-  const [visible,setVisible]=useState(false);
+  
+  const handleAsistir=async(post)=>{
+
+    const data ={
+      idP:post.id,
+      idU:user.user.id
+    }
+    try {
+      const response =await axios.post('http://localhost/Proyectos/olaketal/backend/public/asistir',data,
+      {
+        withCredentials: true, // Asegúrate de incluir las credenciales (cookies) de la sesión
+      }
+      );
+      
+      console.log("Asistencia marcada: ",response.data);
+      alert("Asistencia registrada")
+
+    } catch (error) {
+
+      console.error("Ya has:",error);
+      alert("Error al marcar asistencia");
+    }
+
+  }
 
   const handleReport = (post) => {
     setSelectedPost(post); // Guardamos el post seleccionado para reportar
     setReporteMotivo(""); // Reseteamos el motivo
+    console.log("Reporteeeee: ",post);
     const modalElement = document.getElementById("reporteModal");
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
@@ -28,7 +53,7 @@ function Dashboard() {
           "http://localhost/Proyectos/olaketal/backend/public/getpost"
         );
 
-        console.log("Posts obtenidos: ", response);
+        //console.log("Posts obtenidos: ", response);
 
       // Forzar el parseo si la respuesta es un string
         const data = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
@@ -67,7 +92,6 @@ function Dashboard() {
     fetchPublicaciones(); // Llama a la función para obtener las publicaciones al cargar el componente
   }, []);
 
-
   const handleReporteSubmit =async () => {
     if (!reporteMotivo) {
       alert("Por favor selecciona un motivo de reporte.");
@@ -83,16 +107,17 @@ function Dashboard() {
       // Realizar el POST usando axios
       const response = await axios.post(
         'http://localhost/Proyectos/olaketal/backend/public/reportar',
-        datos
+        datos,
+        {
+          withCredentials: true, // Asegúrate de incluir las credenciales (cookies) de la sesión
+        }
       );
-        setVisible(false);
-      console.log("Reporte enviado:", response.data);
       alert("Reporte enviado correctamente");
     } catch (error) {
-      console.error("Error al enviar el reporte:", error);
-      alert("Hubo un problema al enviar el reporte.");
+      console.error("Error, ya has reportado ese post:");
+      alert("Ya has reportado este post.");
     }
-    console.log('Reporte enviado para el post ',selectedPost,' con motivo ',reporteMotivo,' Usuario: ',user.user);
+    //console.log('Reporte enviado para el post ',selectedPost,' con motivo ',reporteMotivo,' Usuario: ',user.user);
     
     
     const modal = window.bootstrap.Modal.getInstance(document.getElementById("reporteModal"));
@@ -150,10 +175,17 @@ function Dashboard() {
                       Hora: {post.horaALlevarse}
                     </small>
                   </p>
+
+                  <strong className="card-text">
+                  <small className="text-muted">
+                      LUGAR:   {""+post.lugar}
+                      
+                    </small>
+                  </strong>
                   {user && user.user.rol === "usuarioRegular" && (
                     <div className="d-flex justify-content-between">
-                      <button className="btn btn-outline-danger" disabled={visible} onClick={() => handleReport(post)}>Reportar</button>
-                      <button className="btn btn-success">Asistir</button>
+                      <button className="btn btn-outline-danger"  onClick={() => handleReport(post)}>Reportar</button>
+                      <button className="btn btn-success"   onClick={()=>handleAsistir(post)}>Asistir</button>
                     </div>
                   )}
                 </div>
@@ -165,47 +197,47 @@ function Dashboard() {
         )}
       </div>
 
-       {/* Modal para reportar */}
-       <div
-        className="modal fade"
-        id="reporteModal"
-        tabIndex="-1"
-        aria-labelledby="reporteModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="reporteModalLabel">Reportar Anuncio</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <p>Selecciona el motivo del reporte para el evento: <strong>{selectedPost?.titulo}</strong></p>
-              <select
-                className="form-select"
-                value={reporteMotivo}
-                onChange={(e) => setReporteMotivo(e.target.value)}
-              >
-                <option value="">Selecciona un motivo</option>
-                <option value="spam">Spam</option>
-                <option value="violencia">Violencia</option>
-                <option value="discriminacion">Discriminación</option>
-                <option value="contenidoInapropiado">Contenido Inapropiado</option>
-                <option value="otros">Otros</option>
-              </select>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button type="button" className="btn btn-primary" onClick={handleReporteSubmit}>
-                Enviar Reporte
-              </button>
+        {/* Modal para reportar */}
+        <div
+          className="modal fade"
+          id="reporteModal"
+          tabIndex="-1"
+          aria-labelledby="reporteModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="reporteModalLabel">Reportar Anuncio</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <p>Selecciona el motivo del reporte para el evento: <strong>{selectedPost?.titulo}</strong></p>
+                <select
+                  className="form-select"
+                  value={reporteMotivo}
+                  onChange={(e) => setReporteMotivo(e.target.value)}
+                >
+                  <option value="">Selecciona un motivo</option>
+                  <option value="spam">Spam</option>
+                  <option value="violencia">Violencia</option>
+                  <option value="discriminacion">Discriminación</option>
+                  <option value="contenidoInapropiado">Contenido Inapropiado</option>
+                  <option value="otros">Otros</option>
+                </select>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  Cancelar
+                </button>
+                <button type="button" className="btn btn-primary" onClick={handleReporteSubmit}>
+                  Enviar Reporte
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
 

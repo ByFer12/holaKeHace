@@ -47,12 +47,15 @@ class AuthController
         if (isset($data['email'], $data['password'])) {
 
             $usuario = $this->controller->login($data);
-
+           // echo "Usuario registradoooooooooooooo: ".$usuario;
             if ($usuario != null) {
-
+                session_start();                 
+                $_SESSION['idU'] = $usuario->getId();
                 $_SESSION['email'] = $usuario->getEmail();
                 $_SESSION['nombre'] = $usuario->getNombre();
                 $_SESSION['rol'] = $usuario->getRol();
+
+               // header('Content-Type: application/json');
                 http_response_code(200);
                 return json_encode(["message" => "Sesion Iniciada Correctamente", "user" => $usuario]);
             } else {
@@ -65,9 +68,21 @@ class AuthController
     }
 
     public function logout()
-{
-    session_destroy();
-    http_response_code(200); // Sesión cerrada
-    return json_encode(["message" => "Sesión cerrada","success"=>true]);
-}
+    {
+        // Verifica si la sesión está iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start(); // Inicia la sesión si aún no lo está
+        }
+    
+        // Si hay una sesión iniciada, destruye la sesión
+        if (isset($_SESSION)) {
+            session_destroy(); // Destruye la sesión actual
+            http_response_code(200); // Indica que la sesión ha sido cerrada exitosamente
+            return json_encode(["message" => "Sesión cerrada", "success" => true]);
+        } else {
+            http_response_code(400); // Indica que no hay sesión que cerrar
+            return json_encode(["message" => "No hay sesión activa", "success" => false]);
+        }
+    }
+    
 }

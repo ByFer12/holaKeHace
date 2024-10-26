@@ -7,6 +7,7 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useUser();
+    const [message,setMessage]=useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -21,17 +22,21 @@ function Login() {
     
           const userData = response.data; // Esto depende de la respuesta de tu backend
           login(userData);  // Guardar el usuario en el contexto
-          console.log('Usuario Sesion ',userData);
+          console.log('Usuario Sesion ',typeof userData.user.rol);
     
           // Redirigir según el rol del usuario
-          if (userData.role === 'admin') {
-            navigate('/admin-dashboard');
-          } else if (userData.role === 'publicador') {
-            navigate('/publicador-dashboard');
+          if (userData.user.rol === 'admin') {
+            console.log("ADMIIIIIIIIIN");
+            navigate('/admin');
+          } else if (userData.user.rol === 'publicador') {
+            console.log("PUBLICADOOOOOOOOOOOOOOOOOOOR");
+            navigate('/publicador');
           } else {
+            console.log("Regulaaaaaaaaaaaaaaaar");
             navigate('/');
           }
         } catch (error) {
+          setMessage("Credenciales invalidas")
           console.error('Error en el login', error);
         }
       };
@@ -41,11 +46,13 @@ function Login() {
     <div className='container' style={{ marginTop: '150px' }}>
     <div className="container mt-5">
       <div className="row justify-content-center">
+       
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
               <h3 className="text-center mb-4">Login</h3>
               <form onSubmit={handleSubmit}>
+              <p className='text-danger'>{message}</p>
                 <div className="mb-3">
                   <label className="form-label">Email</label>
                   <input

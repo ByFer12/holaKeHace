@@ -28,6 +28,23 @@ class GetCategoriaController{
             return json_encode(["message" => "No se pudo obtener los post: ".$categoria]);
         }
     }
+
+    public function postCategoria($data){
+
+        if(isset($data['titulo'])){
+            if($this->cate->insertarCategoria($data)){
+                http_response_code(200);
+                return json_encode(["message"=>"Categoria creado con exito"]);
+            }else{
+                http_response_code(501);
+                return json_encode(["message"=>"No se pudo crear la categoria"]);
+            }
+
+            http_response_code(400);
+            return json_encode(["message"=>"Datos incompletos"]);
+        }
+
+    }
 }
 
 ?>

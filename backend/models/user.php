@@ -12,11 +12,11 @@ class Usuario
     // Constructor
     
     public function __construct(
-        string $id = '',
-        string $email = '',
-        string $nombre = '',
-        string $pass = '',
-        string $rol = ''
+         $id,
+         $email,
+         $nombre,
+         $pass,
+         $rol
     ) {
         $this->id = $id;
         $this->email = $email;
@@ -26,57 +26,57 @@ class Usuario
     }
 
     // Getters
-    public function getEmail(): string
+    public function getEmail()
     {
         return $this->email;
     }
 
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getNombre(): string
+    public function getNombre()
     {
         return $this->nombre;
     }
 
-    public function getPass(): string
+    public function getPass()
     {
         return $this->pass;
     }
 
-    public function getRol(): string
+    public function getRol()
     {
         return $this->rol;
     }
 
     // Setters
-    public function setEmail(string $email): self
+    public function setEmail(string $email)
     {
         $this->email = $email;
         return $this;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id)
     {
         $this->id = $id;
         return $this;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNombre(string $nombre)
     {
         $this->nombre = $nombre;
         return $this;
     }
 
-    public function setPass(string $pass): self
+    public function setPass(string $pass)
     {
         $this->pass = $pass;
         return $this;
     }
 
-    public function setRol(string $rol): self
+    public function setRol(string $rol)
     {
         $this->rol = $rol;
         return $this;
