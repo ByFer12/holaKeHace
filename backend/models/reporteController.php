@@ -147,17 +147,17 @@ class ReportController
             $idReport = $data['idReport'];
             $idPost = $data['idPost'];
             $idUs = $data['idUs'];
-
+    
             // Iniciar transacción
             $this->conn->beginTransaction();
-
+    
             // Verificar el contador de reportes del usuario
             $queryUsuario = 'SELECT contadorReport, postAutomaticas FROM usuarios WHERE id = :idUs';
             $stmtUsuario = $this->conn->prepare($queryUsuario);
             $stmtUsuario->bindParam(':idUs', $idUs);
             $stmtUsuario->execute();
             $usuario = $stmtUsuario->fetch(PDO::FETCH_ASSOC);
-
+    
             if ($usuario) {
                 // Verificar si tiene postAutomaticas en true
                 if ($usuario['postAutomaticas']) {
@@ -165,17 +165,17 @@ class ReportController
                     $queryUpdatePostAuto = 'UPDATE usuarios SET postAutomaticas = 0 WHERE id = :idUs';
                     $stmtUpdatePostAuto = $this->conn->prepare($queryUpdatePostAuto);
                     $stmtUpdatePostAuto->bindParam(':idUs', $idUs);
-
+    
                     if (!$stmtUpdatePostAuto->execute()) {
                         $this->conn->rollBack();
                         return false;
                     }
-                } elseif ($usuario['contadorReport'] >= 5) {
-                    // Si postAutomaticas es false y el contadorReport es mayor a 5, banear al usuario
+                } elseif ($usuario['contadorReport'] >= 3) {
+                    // Si postAutomaticas es false y el contadorReport es mayor o igual a 3, banear al usuario
                     $queryBaneo = 'UPDATE usuarios SET baneado = 1 WHERE id = :idUs';
                     $stmtBaneo = $this->conn->prepare($queryBaneo);
                     $stmtBaneo->bindParam(':idUs', $idUs);
-
+    
                     if (!$stmtBaneo->execute()) {
                         $this->conn->rollBack();
                         return false;
@@ -185,26 +185,41 @@ class ReportController
                 $this->conn->rollBack();
                 return false; // Usuario no encontrado
             }
-
+    
             // Verificar el contador de reportes de la publicación
             $queryPost = 'SELECT contadorReportes FROM Publicacion WHERE id = :idPost';
             $stmtPost = $this->conn->prepare($queryPost);
             $stmtPost->bindParam(':idPost', $idPost);
             $stmtPost->execute();
             $publicacion = $stmtPost->fetch(PDO::FETCH_ASSOC);
-
-            if ($publicacion && $publicacion['contadorReportes'] >= 3) {
-                // Si contadorReportes de la publicación es mayor o igual a 3, ocultar la publicación
-                $queryUpdateVisible = 'UPDATE Publicacion SET visible = 0 WHERE id = :idPost';
-                $stmtUpdateVisible = $this->conn->prepare($queryUpdateVisible);
-                $stmtUpdateVisible->bindParam(':idPost', $idPost);
-
-                if (!$stmtUpdateVisible->execute()) {
+    
+            if ($publicacion) {
+                if ($publicacion['contadorReportes'] >= 3) {
+                    // Si contadorReportes de la publicación es mayor o igual a 3, ocultar la publicación
+                    $queryUpdateVisible = 'UPDATE Publicacion SET visible = 0 WHERE id = :idPost';
+                    $stmtUpdateVisible = $this->conn->prepare($queryUpdateVisible);
+                    $stmtUpdateVisible->bindParam(':idPost', $idPost);
+    
+                    if (!$stmtUpdateVisible->execute()) {
+                        $this->conn->rollBack();
+                        return false;
+                    }
+                }
+    
+                // Actualizar la columna reportes a true
+                $queryUpdateReportes = 'UPDATE Publicacion SET reportes = 1 WHERE id = :idPost';
+                $stmtUpdateReportes = $this->conn->prepare($queryUpdateReportes);
+                $stmtUpdateReportes->bindParam(':idPost', $idPost);
+    
+                if (!$stmtUpdateReportes->execute()) {
                     $this->conn->rollBack();
                     return false;
                 }
+            } else {
+                $this->conn->rollBack();
+                return false; // Publicación no encontrada
             }
-
+    
             // Confirmar la transacción
             $this->conn->commit();
             return true;
@@ -215,4 +230,5 @@ class ReportController
             return false;
         }
     }
+    
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios"; // Si usas axios para hacer peticiones HTTP
 import { useUser } from "./UserContext";
+import { FaSearch } from "react-icons/fa";
 
 
 function Dashboard() {
@@ -49,16 +50,28 @@ function Dashboard() {
   useEffect(() => {
     const fetchPublicaciones = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost/Proyectos/olaketal/backend/public/getpost"
-        );
+        console.log("Usuario: ",user)
+        let response;
+        if(user){
+           response = await axios.get(
+            "http://localhost/Proyectos/olaketal/backend/public/getAllpost"
+          );
+          const data = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
+          console.log("Todos los post: ",data);
+        }else{
+         response = await axios.get(
+            "http://localhost/Proyectos/olaketal/backend/public/getpost"
+          );
+          const data = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
+          console.log("PArseado: ",data);
+
+        }
 
         //console.log("Posts obtenidos: ", response);
 
       // Forzar el parseo si la respuesta es un string
         const data = typeof response.data === "string" ? JSON.parse(response.data) : response.data;
-          console.log("PArseado: ");
-       
+         
         setPost(data.posts);
         
        
@@ -135,8 +148,8 @@ function Dashboard() {
               className="form-control"
               placeholder="Buscar eventos..."
             />
-            <button className="btn btn-outline-secondary" type="button">
-              <i className="bi bi-search"></i> {/* Icono de lupa */}
+            <button className="btn btn-outline-secondary"  style={{height:'38px'}}type="button">
+              <i  style={{height:'10px'}}> <FaSearch/></i> {/* Icono de lupa */}
             </button>
           </div>
           <select className="form-select">

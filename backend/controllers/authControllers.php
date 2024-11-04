@@ -38,9 +38,34 @@ class AuthController
             return false;
         }
         http_response_code(400);
-        return json_encode(["message" => "Datos incompletos"]);
+        return json_encode(["message" => "Datos incompletossssss"]);
     }
 
+    //cambiar contrasenia
+    public function updatePass($data)
+    {
+        try {
+            if (isset($data['userId'], $data['pass'], $data['currPass'])) {
+                $userId=$data['userId'];
+                $pass=$data['pass'];
+                $currPass=$data['currPass'];
+
+                if ($this->controller->setPassword($userId,$currPass, $pass)) {
+                    http_response_code(200);
+                    return json_encode(["message" => "Contraseña cambiada correctamente"]);
+                } else {
+                    http_response_code(501);
+                    return json_encode(["message" => "Error al cambiar cotnaseña"]);
+                }
+            }
+        } catch (Exception $e) {
+            http_response_code(502);
+            return json_encode(["message" => "Error al cambiar cotnaseña".$e]);
+            return false;
+        }
+        http_response_code(400);
+        return json_encode(["message" => "Datos incompletos"]);
+    }
 
     public function login($data)
     {

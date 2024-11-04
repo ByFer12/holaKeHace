@@ -64,6 +64,11 @@ if ($method === 'POST' && $_GET['action'] === 'register') {
     $response = $post->getPublicPost();
 
     echo json_encode($response);
+} elseif ($method === 'GET' && $_GET['action'] === 'getAllpost') {
+
+    $response = $post->getAllPost();
+
+    echo json_encode($response);
 } elseif ($method === 'GET' && $_GET['action'] === 'getreport') {
 
     $response = $report->getDetailReport();
@@ -122,7 +127,20 @@ if ($method === 'POST' && $_GET['action'] === 'register') {
     $response = $report->ignorarReporte($data);
         
     echo json_encode($response);
-}elseif ($method === 'PUT' && $_GET['action'] === 'aprove'){
+}elseif ($method === 'PUT' && $_GET['action'] === 'editPost') {
+    // Obtén el cuerpo de la solicitud primero
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    // Luego verifica si $data tiene contenido
+    if ($data) {
+        $response = $post->editPost($data);
+        echo json_encode($response);
+    } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(["message" => "Datos no válidos."]);
+    }
+}
+elseif ($method === 'PUT' && $_GET['action'] === 'aprove'){
 
     $data = json_decode(file_get_contents('php://input'), true);
     $response = $report->aproveReportes($data);
@@ -139,13 +157,29 @@ if ($method === 'POST' && $_GET['action'] === 'register') {
     $response = $post->aprovePost($data);
         
     echo json_encode($response);
+}elseif ($method === 'PUT' && $_GET['action'] === 'setpass'){
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $response = $auth->updatePass($data);
+        
+    echo json_encode($response);
 } elseif ($method === 'GET' && $_GET['action'] === 'getdetalles') {
-    //isAuthenticated();
-    //isRole("usuarioRegular");
 
     if (isset($_GET['idPost'])) {
         $data = ['idPost' => $_GET['idPost']];
         $response = $post->obtenerPostId($data);
+        echo json_encode($response);
+    } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(["message" => "Acción o idU no proporcionados."]);
+    }
+}
+
+elseif ($method === 'GET' && $_GET['action'] === 'getInfoPost') {
+
+    if (isset($_GET['userId'])) {
+        $data = ['userId' => $_GET['userId']];
+        $response = $post->getInfoPost($data);
         echo json_encode($response);
     } else {
         http_response_code(400); // Bad Request

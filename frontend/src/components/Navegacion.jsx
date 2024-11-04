@@ -3,6 +3,7 @@ import { useUser } from "./UserContext"; // Importa el contexto del usuario
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {FaBell, FaCheckCircle, FaClipboardCheck, FaEdit, FaHome, FaList, FaSignOutAlt, FaUser} from 'react-icons/fa'
 function Navbar() {
   const { user, logout } = useUser(); // Obtén el usuario y la función de logout desde el contexto
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function Navbar() {
         )
       );
     };
+    
 
     actualizarTiempos(); // Actualizar inmediatamente
 
@@ -101,9 +103,9 @@ function Navbar() {
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div className="container">
           {user ? (
-            <strong> OlaKeTal, {user.user.nombre}</strong>
+            <strong> OlaKeHace, {user.user.nombre}</strong>
           ) : (
-            <strong>OlaKeTal</strong>
+            <strong>OlaKeHace</strong>
           )}
           <button
             className="navbar-toggler"
@@ -120,8 +122,46 @@ function Navbar() {
             {user && user.user.rol === "usuarioRegular" && (
               <ul className="navbar-nav mx-auto">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/">
-                    Home
+                  <Link className="nav-link"  style={{
+                      color: "#4b5563",
+                      margin: "0 0.5rem",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#f3f4f6";
+                      e.target.style.color = "#4f46e5";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "transparent";
+                      e.target.style.color = "#4b5563";
+                    }}
+                     to="/">
+                    <FaHome title="Inicio" style={{ fontSize: '2.5rem' }}/>
+                    
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link className="nav-link"  style={{
+                      color: "#4b5563",
+                      margin: "0 0.5rem",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#f3f4f6";
+                      e.target.style.color = "#4f46e5";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "transparent";
+                      e.target.style.color = "#4b5563";
+                    }}
+                     to="/info">
+                    <FaUser title="informacion" style={{ fontSize: '2rem' }}/>
+                    
                   </Link>
                 </li>
               </ul>
@@ -129,20 +169,89 @@ function Navbar() {
             {user && user.user.rol === "publicador" && (
               <ul className="navbar-nav mx-auto">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/publicador">
-                    Home
+                  <Link className="nav-link" 
+                  style={{
+                    color: "#4b5563",
+                    margin: "0 0.5rem",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#f3f4f6";
+                    e.target.style.color = "#4f46e5";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#4b5563";
+                  }}  
+                  to="/publicador">
+                   <FaHome title="Inicio" style={{ fontSize: '2rem' }}/>
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" to="/crear">
-                    Crear Publicacion
+                  <Link className="nav-link"
+                   style={{
+                    color: "#4b5563",
+                    margin: "0 0.5rem",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#f3f4f6";
+                    e.target.style.color = "#4f46e5";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#4b5563";
+                  }} 
+                  to="/crear">
+                    <FaEdit title="Nuevo Post" style={{ fontSize: '2rem' }}/>
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" to="/posts-creados">
-                    Anuncios Publicados
+                  <Link className="nav-link"
+                   style={{
+                    color: "#4b5563",
+                    margin: "0 0.5rem",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#f3f4f6";
+                    e.target.style.color = "#4f46e5";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#4b5563";
+                  }} 
+                  to="/posts-creados">
+                    <FaList title="Lista de post" style={{ fontSize: '2rem' }}/>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link"  style={{
+                      color: "#4b5563",
+                      margin: "0 0.5rem",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#f3f4f6";
+                      e.target.style.color = "#4f46e5";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "transparent";
+                      e.target.style.color = "#4b5563";
+                    }}
+                     to="/info-pub">
+                    <FaUser title="informacion" style={{ fontSize: '2rem' }}/>
+                    
                   </Link>
                 </li>
               </ul>
@@ -151,20 +260,91 @@ function Navbar() {
             {user && user.user.rol === "admin" && (
               <ul className="navbar-nav mx-auto">
                 <li className="nav-item">
-                  <Link className="nav-link" to="/admin">
-                    Home
+                  <Link className="nav-link"
+                  style={{
+                    color: "#4b5563",
+                    margin: "0 0.5rem",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#f3f4f6";
+                    e.target.style.color = "#4f46e5";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#4b5563";
+                  }}
+                  to="/admin">
+                  <FaHome title="Inicio" style={{ fontSize: '2.5rem' }}/>
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" to="/post-aprobar">
-                    Aprobar post
+                  <Link className="nav-link"
+                  style={{
+                    color: "#4b5563",
+                    margin: "0 0.5rem",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#f3f4f6";
+                    e.target.style.color = "#4f46e5";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#4b5563";
+                  }}
+                  to="/post-aprobar">
+                  
+                    <FaCheckCircle  title="Aprobar post" style={{ fontSize: '2.5rem' }}/>
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link className="nav-link" to="/report-apribar">
-                    Aprobar reporte
+                  <Link className="nav-link"
+                  style={{
+                    color: "#4b5563",
+                    margin: "0 0.5rem",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#f3f4f6";
+                    e.target.style.color = "#4f46e5";
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = "#4b5563";
+                  }}
+                  to="/report-apribar">
+                    <FaClipboardCheck title="Aprobar reportes" style={{ fontSize: '2.5rem' }}/>
+                   
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link"  style={{
+                      color: "#4b5563",
+                      margin: "0 0.5rem",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = "#f3f4f6";
+                      e.target.style.color = "#4f46e5";
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = "transparent";
+                      e.target.style.color = "#4b5563";
+                    }}
+                     to="/admin-info">
+                    <FaUser title="informacion" style={{ fontSize: '2rem' }}/>
+                    
                   </Link>
                 </li>
               </ul>
@@ -193,11 +373,29 @@ function Navbar() {
                   {user && user.user.rol === "usuarioRegular" && (
                     <li className="nav-item">
                       <button
-                        className="nav-link btn btn btn-info"
+                        className="nav-link btn"
                         type="button"
                         onClick={handleNoti}
+                        style={{
+                          color: "#4b5563",
+                          margin: "0 0.5rem",
+                          padding: "0.5rem 1rem",
+                          borderRadius: "6px",
+                          transition: "all 0.2s ease",
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.backgroundColor = "#f3f4f6";
+                          e.target.style.color = "#4f46e5";
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.backgroundColor = "transparent";
+                          e.target.style.color = "#4b5563";
+                        }}
+
                       >
-                        Notificaciones
+                        
+                        <FaBell style={{ fontSize: '2rem', marginRight:'55px' }}/>
+                        
                       </button>
                     </li>
                   )}
@@ -205,9 +403,23 @@ function Navbar() {
                   <li className="nav-item">
                     <button
                       className="nav-link btn"
-                      onClick={handleLogout} // Llama a la función de logout
+                      onClick={handleLogout}
+                      style={{
+                        color: "#fca5a6", // Rojo pálido
+                        margin: "0 0.5rem",
+                        padding: "0.5rem 1rem",
+                        borderRadius: "6px",
+                        transition: "all 0.2s ease",
+                        cursor: "pointer", // Agrega un cursor de mano para indicar que es interactivo
+                      }}
+                      onMouseOver={(e) => {
+                        e.target.style.color = "#dc2626"; // Rojo más oscuro
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.color = "#fca5a5"; // Regresa a rojo pálido
+                      }}
                     >
-                      Cerrar Sesion
+                      <FaSignOutAlt style={{ fontSize: '2rem', marginRight:'55px' }}/>
                     </button>
                   </li>
                 </>
@@ -217,7 +429,7 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* Modal para reportar */}
+      {/* Modal De Notificaciones */}
       <div
         className="modal fade"
         id="notiModal"
@@ -241,28 +453,35 @@ function Navbar() {
             <div className="modal-body">
               <div className="list-group rounded-start border border-3 border-info">
                 {user && noti.length > 0 ? (
-                  noti.map((notification, index) => (
-                    <div
-                      key={index}
-                      className="list-group-item border border-info"
-                    >
-                      <h5 className="mb-1">{notification.titulo}</h5>
-                      <p className="mb-1">
-                        Fecha: {notification.fechaALlevarse}
-                      </p>
-                      <p>Hora: {notification.horaALlevarse}</p>
+                  noti.map((notification, index) => {
+                    const tiempo = tiemposRestantes[index];
 
-                      {tiemposRestantes[index] ? (
-                        <p className="text-bg-warning">
-                          Quedan {tiemposRestantes[index].dias} días,{" "}
-                          {tiemposRestantes[index].horas} horas y{" "}
-                          {tiemposRestantes[index].minutos} minutos.
-                        </p>
-                      ) : (
-                        <p>Cargando tiempo restante...</p>
-                      )}
-                    </div>
-                  ))
+                    if (
+                      tiempo &&
+                      (tiempo.dias > 0 ||
+                        tiempo.horas > 0 ||
+                        tiempo.minutos > 0)
+                    ) {
+                      return (
+                        <div
+                          key={index}
+                          className="list-group-item border border-info"
+                        >
+                          <h5 className="mb-1">{notification.titulo}</h5>
+                          <p className="mb-1">
+                            Fecha: {notification.fechaALlevarse}
+                          </p>
+                          <p>Hora: {notification.horaALlevarse}</p>
+                          <p className="text-bg-warning">
+                            Quedan {tiempo.dias} días, {tiempo.horas} horas y{" "}
+                            {tiempo.minutos} minutos.
+                          </p>
+                        </div>
+                      );
+                    } else {
+                      return null; // No mostrar si tiempo restante es cero
+                    }
+                  })
                 ) : (
                   <div className="list-group-item">
                     <p>No hay notificaciones.</p>

@@ -29,6 +29,24 @@ class PostController
         }
     }
 
+    public function obtenerTodosPost()
+    {
+        try {
+            // Consulta para obtener todas las publicaciones
+            $query = 'SELECT * FROM Publicacion where visible =1';  // Cambia a la estructura de tu tabla
+            $statement = $this->conn->prepare($query);
+            $statement->execute();
+
+            // Fetch all devuelve un array de todas las filas
+            $publicaciones = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            return $publicaciones;
+        } catch (PDOException $e) {
+            // Manejar el error
+            error_log("Error al obtener publicaciones: " . $e->getMessage());
+            return null;
+        }
+    }
     public function obtenerPostPorId($idPost)
 {
     try {
@@ -104,6 +122,35 @@ class PostController
     }
 }
 
+
+//obtener info de post:
+public function getUserPosts($data)
+{
+    try {
+        $userId = $data['userId'];
+
+        // Preparar la llamada al procedimiento almacenado
+        $query = "CALL GetUserPosts(:userId)";
+        $statement = $this->conn->prepare($query);
+
+        // Vincular el parámetro userId
+        $statement->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+        // Ejecutar la consulta
+        $statement->execute();
+
+        // Obtener los resultados en un array asociativo
+        $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        // Devolver los resultados
+        return $posts;
+
+    } catch (PDOException $e) {
+        // Manejar la excepción
+        error_log("Error al obtener los posts del usuario: " . $e->getMessage());
+        return null;
+    }
+}
 
 
     public function crearPublicacion($data)
@@ -181,4 +228,66 @@ class PostController
             return false;
         }
     }
+
+
+    public function editarPublicacion($data)
+{
+    try {
+        // Iniciar la transacción
+        $this->conn->beginTransaction();
+
+        // Asignar los valores que recibimos desde el array $data
+        $idPublicacion = $data['id'];
+        $titulo = $data['titulo'];
+        $descripcion = $data['descripcion'];
+        $fechaALlevarse = $data['fechaALlevarse'];
+        $horaALlevarse = $data['horaALlevarse'];
+        $cupo = $data['cantidadCupos'];
+        $urlImagen = $data['urlImagen'];
+        $lugar = $data['lugar'];
+
+        // Consulta SQL para actualizar una publicación existente
+        $updateQuery = '
+        UPDATE Publicacion 
+        SET 
+            titulo = :titulo,
+            descripcion = :descripcion,
+            fechaALlevarse = :fechaALlevarse,
+            horaALlevarse = :horaALlevarse,
+            cupo = :cupo,
+            urlImagen = :urlImagen,
+            lugar = :lugar
+        WHERE id = :idPublicacion';
+
+        // Preparar la consulta
+        $statement = $this->conn->prepare($updateQuery);
+
+        // Asignar valores a los parámetros
+        $statement->bindParam(':titulo', $titulo);
+        $statement->bindParam(':descripcion', $descripcion);
+        $statement->bindParam(':fechaALlevarse', $fechaALlevarse);
+        $statement->bindParam(':horaALlevarse', $horaALlevarse);
+        $statement->bindParam(':cupo', $cupo);
+        $statement->bindParam(':urlImagen', $urlImagen);
+        $statement->bindParam(':lugar', $lugar);
+        $statement->bindParam(':idPublicacion', $idPublicacion);
+
+        // Ejecutar la consulta
+        if ($statement->execute()) {
+            // Confirmar la transacción si todo va bien
+            $this->conn->commit();
+            return true;
+        } else {
+            // Revertir la transacción en caso de error
+            $this->conn->rollBack();
+            return false;
+        }
+    } catch (PDOException $e) {
+        // En caso de error, revertir la transacción y registrar el error
+        $this->conn->rollBack();
+        error_log("Error al editar la publicación: " . $e->getMessage());
+        return false;
+    }
+}
+
 }

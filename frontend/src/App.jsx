@@ -13,6 +13,7 @@ import AdminDashboard from "./components/admin/adminDashboard";
 import BienvenidaA from "./components/admin/bienvenida";
 import AprobarPost from "./components/admin/adminDashboard";
 import AprobarReport from "./components/admin/aprobarReporte";
+import InfoPorfile from "./components/Info";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -37,7 +38,7 @@ function App() {
                   path="/admin"
                   element={
                     <ProtectedRoute roleRequired="admin">
-                      <BienvenidaA/>
+                      <BienvenidaA />
                     </ProtectedRoute>
                   }
                 />
@@ -45,7 +46,7 @@ function App() {
                   path="/report-apribar"
                   element={
                     <ProtectedRoute roleRequired="admin">
-                     <AprobarReport/>
+                      <AprobarReport />
                     </ProtectedRoute>
                   }
                 />
@@ -53,7 +54,7 @@ function App() {
                   path="/post-aprobar"
                   element={
                     <ProtectedRoute roleRequired="admin">
-                      <AprobarPost/>
+                      <AprobarPost />
                     </ProtectedRoute>
                   }
                 />
@@ -73,9 +74,33 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/info"
+                  element={
+                    <ProtectedRoute roleRequired="usuarioRegular">
+                      <InfoPorfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/info-pub"
+                  element={
+                    <ProtectedRoute roleRequired="publicador">
+                      <InfoPorfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin-info"
+                  element={
+                    <ProtectedRoute roleRequired="admin">
+                      <InfoPorfile />
+                    </ProtectedRoute>
+                  }
+                />
 
                 <Route
-                  path="/posts"
+                  path="/posts-creados"
                   element={
                     <ProtectedRoute roleRequired="publicador">
                       <Posts />
